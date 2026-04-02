@@ -105,4 +105,24 @@ describe('SidebarContent', () => {
       expect(pushMock).toHaveBeenCalledWith('/new');
     });
   });
+
+  describe('Busca', () => {
+    it('deveria navegar com URL codificada ao digitar e limpar', async () => {
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      await user.type(searchInput, 'Prompt 1');
+
+      expect(pushMock).toHaveBeenCalled();
+
+      const lastCall = pushMock.mock.calls.at(-1);
+      expect(lastCall?.[0]).toBe('/?q=Prompt%201');
+
+      await user.clear(searchInput);
+
+      const lastCallAfterClear = pushMock.mock.calls.at(-1);
+      expect(lastCallAfterClear?.[0]).toBe('/');
+    });
+  });
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 import {
   Plus as AddIcon,
   ArrowLeftToLine,
@@ -27,11 +27,22 @@ export type SidebarContentProps = {
 export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [query, setQuery] = useState('');
 
   const collapsedSidebar = () => setIsCollapsed(true);
   const expandSidebar = () => setIsCollapsed(false);
 
   const handleNewPrompt = () => router.push('/new');
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setQuery(value);
+
+    startTransition(() => {
+      const url = value ? `/?q=${encodeURIComponent(value)}` : '/';
+      router.push(url, { scroll: false });
+    });
+  };
 
   return (
     <aside
@@ -90,6 +101,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                   placeholder="Buscar prompts..."
                   autoFocus
                   className="w-full bg-gray-700 border-gray-600 focus:ring-accent-500 focus:border-accent-500 text-gray-100"
+                  value={query}
+                  onChange={handleQueryChange}
                 />
               </form>
             </section>
