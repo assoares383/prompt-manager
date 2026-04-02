@@ -44,6 +44,16 @@ describe('SidebarContent', () => {
 
       expect(screen.getByText(initialPrompts[0].title)).toBeInTheDocument();
     });
+
+    it('deveria atualizar o campo de busca ao digitar', async () => {
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      await user.type(searchInput, 'Prompt 1');
+
+      expect(searchInput).toHaveValue('Prompt 1');
+    });
   });
 
   describe('Colapsar / Expandir', () => {

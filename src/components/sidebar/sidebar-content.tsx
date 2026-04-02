@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 
 import { Logo } from '../logo';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
 type Prompt = {
   id: string;
@@ -80,6 +81,18 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 </Button>
               </header>
             </div>
+
+            <section className="mb-5">
+              <form action="">
+                <Input
+                  name="q"
+                  type="text"
+                  placeholder="Buscar prompts..."
+                  autoFocus
+                  className="w-full bg-gray-700 border-gray-600 focus:ring-accent-500 focus:border-accent-500 text-gray-100"
+                />
+              </form>
+            </section>
 
             <div>
               <Button onClick={handleNewPrompt} className="w-full" size="lg">
