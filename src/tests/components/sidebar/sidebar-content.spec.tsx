@@ -7,6 +7,7 @@ import {
 } from '@/components/sidebar/sidebar-content';
 
 const pushMock = jest.fn();
+let mockSearchParams = new URLSearchParams();
 
 const initialPrompts = [
   {
@@ -20,6 +21,7 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: pushMock,
   }),
+  useSearchParams: () => mockSearchParams,
 }));
 
 const makeSut = (
@@ -95,7 +97,7 @@ describe('SidebarContent', () => {
   });
 
   describe('Novo prompt', () => {
-    it('deveria navegar o usuario para a pagina de novo propmpt', async () => {
+    it('deveria navegar o usuario para a pagina de novo prompt', async () => {
       makeSut({ prompts: [] });
 
       const newButton = screen.getByRole('button', { name: /Novo prompt/i });
@@ -123,6 +125,17 @@ describe('SidebarContent', () => {
 
       const lastCallAfterClear = pushMock.mock.calls.at(-1);
       expect(lastCallAfterClear?.[0]).toBe('/');
+    });
+    it('deveria iniciar o campo de busca com o search param', () => {
+      const text = 'inicial';
+      const searchParams = new URLSearchParams(`q=${text}`);
+      mockSearchParams = searchParams;
+
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      expect(searchInput).toHaveValue(text);
     });
   });
 });

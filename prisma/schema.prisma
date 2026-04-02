@@ -12,7 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model Propmpt {
+model Prompt {
   id        String   @id @default(cuid())
   title     String   @unique
   content   String
