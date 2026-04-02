@@ -1,9 +1,20 @@
 import { render, screen } from '@/lib/test-utils';
 import userEvent from '@testing-library/user-event';
 
-import { SidebarContent } from '@/components/sidebar/sidebar-content';
+import {
+  SidebarContent,
+  SidebarContentProps,
+} from '@/components/sidebar/sidebar-content';
 
 const pushMock = jest.fn();
+
+const initialPrompts = [
+  {
+    id: '1',
+    title: 'Prompt 1',
+    content: 'Conteúdo do Prompt 1',
+  },
+];
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -11,21 +22,28 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-const makeSut = () => {
-  return render(<SidebarContent />);
+const makeSut = (
+  { prompts = initialPrompts }: SidebarContentProps = {} as SidebarContentProps
+) => {
+  return render(<SidebarContent prompts={prompts} />);
 };
 
 describe('SidebarContent', () => {
   const user = userEvent.setup();
 
-  it('deveria renderizar o botao para criar um novo prompt', () => {
-    makeSut();
+  describe('Base', () => {
+    it('deveria renderizar o botao para criar um novo prompt', () => {
+      makeSut({ prompts: [] });
 
-    expect(screen.getByRole('complementary')).toBeVisible();
+      expect(screen.getByRole('complementary')).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Novo prompt' })).toBeVisible();
+    });
 
-    expect(
-      screen.getByRole('button', { name: /novo prompt/i })
-    ).toBeInTheDocument();
+    it('deveria renderizar a lista de prompts', () => {
+      makeSut();
+
+      expect(screen.getByText(initialPrompts[0].title)).toBeInTheDocument();
+    });
   });
 
   describe('Colapsar / Expandir', () => {
@@ -49,7 +67,7 @@ describe('SidebarContent', () => {
     });
 
     it('deveria contrair e mostrar o botao de expandir', async () => {
-      makeSut();
+      makeSut({ prompts: [] });
 
       const collapseButton = screen.getByRole('button', {
         name: /minimizar sidebar/i,
@@ -68,7 +86,7 @@ describe('SidebarContent', () => {
 
   describe('Novo prompt', () => {
     it('deveria navegar o usuario para a pagina de novo propmpt', async () => {
-      makeSut();
+      makeSut({ prompts: [] });
 
       const newButton = screen.getByRole('button', { name: /Novo prompt/i });
 

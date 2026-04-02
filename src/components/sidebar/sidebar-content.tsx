@@ -13,7 +13,17 @@ import { useRouter } from 'next/navigation';
 import { Logo } from '../logo';
 import { Button } from '../ui/button';
 
-export const SidebarContent = () => {
+type Prompt = {
+  id: string;
+  title: string;
+  content: string;
+};
+
+export type SidebarContentProps = {
+  prompts: Prompt[];
+};
+
+export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -80,6 +90,15 @@ export const SidebarContent = () => {
           </section>
         </>
       )}
+
+      {prompts.map((prompt) => (
+        <div
+          key={prompt.id}
+          className="p-4 border-b border-gray-600 hover:bg-gray-700 transition-colors"
+        >
+          <h3 className="font-semibold text-gray-100">{prompt.title}</h3>
+        </div>
+      ))}
     </aside>
   );
 };
