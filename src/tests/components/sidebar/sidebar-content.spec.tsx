@@ -9,6 +9,13 @@ import {
 const pushMock = jest.fn();
 let mockSearchParams = new URLSearchParams();
 
+jest.mock('@/app/actions/prompt.actions', () => ({
+  searchPromptAction: jest.fn(async () => ({
+    success: true,
+    prompts: initialPrompts,
+  })),
+}));
+
 const initialPrompts = [
   {
     id: '1',
